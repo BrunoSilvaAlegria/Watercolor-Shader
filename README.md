@@ -8,6 +8,4 @@ Neste projeto pretende-se alcançar um _shader_ que replique o tipo de pintura d
 
 Esta técnica trata-se de quando se aplica um pincel molhado de tinta num papel também molhado, permitindo criar manchas de cor difusas que se dispersam de forma irregular, e cujas bordas misturam-se e fazem _bloom_ ou entrar em contacto com outras cores. Tem um aspeto transparente, com a tinta pouco concentrada num único lugar.
 
-![Wet-on-Wet Example](Images/wet-on-wet-watercolour-technique.jpg)
-
-Exemplo da técnica _wet-on-wet_ em papel granulado
+![Wet-on-Wet Example](Images/wet-on-wet-watercolour-technique.jpg "Exemplo da técnica _wet-on-wet_ em papel granulado")
