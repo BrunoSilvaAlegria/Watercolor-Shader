@@ -12,7 +12,7 @@ Esta técnica trata-se de quando se aplica um pincel molhado de tinta num papel 
 
 ---
 
-##Bibliotecas e Referências
+## Bibliotecas e Referências
 
 Powerpoints e vídeos disponibilizados pelo professor.
 
