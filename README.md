@@ -16,7 +16,7 @@ Esta técnica trata-se de quando se aplica um pincel molhado de tinta/pigmento n
 
 Comecei por definir as variáveis que necessitava para imitar a granulação presente no papel. Essas são:
 
-- _GrainNormal_ -> Aceita uma textura do tipo _normal_ que indique onde há relevo.
+- _GrainNormal_ -> Aceita uma textura do tipo _normal_ que dê e indique onde há relevo.
 - _GrainNormalIntensity_ -> Gere quanto desse relevo é usado (ou seja, a intensidade na textura) por meio de um _slider_ que vai de 0(não é usado de todo) a 1(é totalmente usado).
 - _GrainRoughness_ -> Gere o quão áspero ou liso também por meio de um _slider_ que vai de 0(liso) a 1(áspero).
 
@@ -26,5 +26,12 @@ De seguida, inicializei essas variáveis no _CBuffer_ com o seu respetivo tipo (
 
 ## Bibliotecas e Referências
 
+### Bibliotecas
+
 Powerpoints e vídeos disponibilizados pelo professor.
 Utilização de IA para tirar dúvidas, consoante a necessidade.
+
+### Referências
+
+[text](https://www.emilywassell.co.uk/watercolour-for-beginners/list-of-techniques/wet-on-wet-watercolour/) - Technique Definition
+[text](https://www.youtube.com/watch?v=kiSKb54cogo) - HSV convertion from RGB
