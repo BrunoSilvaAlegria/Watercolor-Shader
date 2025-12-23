@@ -3,8 +3,7 @@ Shader "Custom/Watercolor_Shader"
     Properties
     {
         //Watercolor properties
-        _BaseColor("Base Color", Color) = (1, 1, 1, 1)
-        _BaseMap("Base Map", 2D) = "white" {}
+        _AlbedoMap("Albedo Map", 2D) = "white" {}
         
         //Paper Granulation properties
         _GrainNormal("Grain Texture", 2D) = "white" {} //Height or Normal texture
@@ -38,6 +37,7 @@ Shader "Custom/Watercolor_Shader"
             #pragma multi_compile _MAIN_LIGHT_SHADOWS
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 
             struct Attributes
             {
@@ -49,18 +49,18 @@ Shader "Custom/Watercolor_Shader"
             struct Varyings
             {
                 float4 positionHCS : SV_POSITION;
-                float3 normalWS   : TEXCOORD1;
+                float3 normalWS : TEXCOORD1;
                 float2 uv : TEXCOORD0;
+                half3 lightAmount : TEXCOORD2;
             };
 
-            TEXTURE2D(_BaseMap);
-            SAMPLER(sampler_BaseMap);
+            TEXTURE2D(_AlbedoMap);
+            SAMPLER(sampler_AlbedoMap);
             TEXTURE2D(_GrainNormal);
             SAMPLER(sampler_GrainNormal);
 
             CBUFFER_START(UnityPerMaterial)
-                half4 _BaseColor;
-                float4 _BaseMap_ST;
+                float4 _AlbedoMap_ST;
                 float4 _GrainNormal_ST;
                 float _GrainNormalIntensity;
                 float _GrainRoughness;
@@ -69,14 +69,18 @@ Shader "Custom/Watercolor_Shader"
             Varyings vert(Attributes IN)
             {
                 Varyings OUT;
-                OUT.positionHCS = TransformObjectToHClip(IN.positionOS.xyz);
-                OUT.uv = TRANSFORM_TEX(IN.uv, _BaseMap);
+                OUT.positionHCS = TransformObjectToHClip(IN.positionOS.xyz);             
+                OUT.uv = TRANSFORM_TEX(IN.uv, _AlbedoMap);
+
+                VertexNormalInputs positions = GetVertexNormalInputs(IN.positionOS); //Get the VertexNormalInputs of the vertex, which contains the normal in world space
+                Light light = GetMainLight(); //Get the properties of the main light (directional)
+                OUT.lightAmount = LightingLambert(light.color, light.direction, positions.normalWS.xyz); //Calculate the amount of light the vertex receives
                 return OUT;
             }
 
             half4 frag(Varyings IN) : SV_Target
             {
-                half4 color = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, IN.uv) * _BaseColor;
+                half4 color = SAMPLE_TEXTURE2D(_AlbedoMap, sampler_AlbedoMap, IN.uv);
 
                 //Sample the grain normal with TRANSFORM_TEX to apply tilling and offset to tex coords within material properties
                 half4 grainSample = SAMPLE_TEXTURE2D(_GrainNormal, sampler_GrainNormal, TRANSFORM_TEX(IN.uv, _GrainNormal));
@@ -84,7 +88,7 @@ Shader "Custom/Watercolor_Shader"
                 grainLum = saturate(grainLum * _GrainNormalIntensity); //Clamping (basically if value > max value=max, same for minimum)
                 half grainBlend = lerp(1.0h, grainLum, saturate((half)_GrainRoughness)); //_GrainRoughness = 0 -> no grain | _GrainRoughness = 1 -> all grain (grainLum)
                 color *= grainBlend;
-                return color;
+                return color * float4(IN.lightAmount, 1); //Set the fragment color to the color map multiplied by the interpolated amount of light
             }
             ENDHLSL
         }
