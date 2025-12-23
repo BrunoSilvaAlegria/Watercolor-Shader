@@ -2,13 +2,21 @@
 
 ## Introdução
 
-Neste projeto pretende-se alcançar um _shader_ que replique o tipo de pintura de aquarela (_watercolor_), especificamente a técnica _wet-on-wet_ e com um granulado do papel presente.
+Neste projeto pretende-se alcançar um _shader_ aplicado por objeto que replique o tipo de pintura de aquarela (_watercolor_), especificamente a técnica _wet-on-wet_ e com um granulado do papel presente.
 
 ### O que é a técnica _wet-on-wet_?
 
 Esta técnica trata-se de quando se aplica um pincel molhado de tinta/pigmento num papel também molhado, permitindo criar manchas de cor difusas que se dispersam de forma irregular, e cujas bordas misturam-se e fazem _bloom_ ao entrar em contacto com outras cores. Tem um aspeto transparente, com a tinta pouco concentrada num único lugar.
 
 ![Wet-on-Wet Example](Images/wet-on-wet-watercolour-technique.jpg "Exemplo da técnica wet-on-wet em papel granulado")
+
+### Objetivos
+
+- Aplicar o granulado do papel nos objetos
+
+### Diagrama inicial
+
+Esta é a estrutura inicialmente feita para o desenvolvimento deste _shader_
 
 ---
 
@@ -22,6 +30,16 @@ Comecei por definir as variáveis que necessitava para imitar a granulação pre
 
 De seguida, inicializei essas variáveis no _CBuffer_ com o seu respetivo tipo (_float_ para a _GrainNormalIntensity_ e _GrainRoughness_ pois recebem apenas 1 canal, ao contrário do _float4_ usado na _GrainNormal_ devido a esta aceitar 4 canais (_RGBA_)), e o _sampler_ da _GrainNormal_ para receber essa textura e poder ser usada.
 
+### _Fragment Shader_
+
+Inicialmente fiz com que o grão fosse visível quando aplicada uma textura e que o _tilling_ e _offset_ dessa textura podesse ser alterada diretamente no material (_grainSample_).
+De seguida foi feito um _dot product_ entre essa _sample_ e a matriz da componente Y(_Luma_) do espaço de cores YIQ, que é o equivalente à luminosidade (_grainLum_). Mas porque não usar diretamente _RGB_? Simplesmente porque usar RGB bruto pode distorcer o efeito por tom (_hue_), enquanto usar _luma_ fornece um contraste consistente.
+Fiz também um _saturate_ para limitar o valor máximo e mínimo possível de se atingir (_clamp_), seguido de um _lerp_ entre 1.0(_half_) e _grainLum_ com um fator _saturate_(_GrainRoughness_(também _half_)) para que o resultado fique entre 0 e 1.
+No entanto, notei que a luz não estava a influenciar a cor dos objetos onde o material com o _shader_ estava aplicado.
+
+![Grain](Images/Grain_no_light_effect.png "Vê-se o grão")
+![Grain no light effect](Images/Grain_no_light_effect2.png "Vê-se o grão mas não há influência da luz")
+
 ---
 
 ## Bibliotecas e Referências
@@ -29,9 +47,22 @@ De seguida, inicializei essas variáveis no _CBuffer_ com o seu respetivo tipo (
 ### Bibliotecas
 
 Powerpoints e vídeos disponibilizados pelo professor.
+
 Utilização de IA para tirar dúvidas, consoante a necessidade.
 
 ### Referências
 
-[text](https://www.emilywassell.co.uk/watercolour-for-beginners/list-of-techniques/wet-on-wet-watercolour/) - Technique Definition
-[text](https://www.youtube.com/watch?v=kiSKb54cogo) - HSV convertion from RGB
+#### Arte
+
+[Definição da Técnica](https://www.emilywassell.co.uk/watercolour-for-beginners/list-of-techniques/wet-on-wet-watercolour/)
+
+#### Unity
+
+[Produto Interno](https://docs.unity3d.com/Packages/com.unity.shadergraph@6.9/manual/Dot-Product-Node.html)
+[Lerp](https://docs.unity3d.com/ScriptReference/Mathf.Lerp.html)
+[Saturação(Método saturate)(não encontrei informação na documentação do Unity)](https://en.wikipedia.org/wiki/Saturation_arithmetic)
+
+#### Outros
+
+[Espaço de cores YIQ](https://en.wikipedia.org/wiki/YIQ)
+[Conversão HSV de RGB (YIQ)](https://www.youtube.com/watch?v=kiSKb54cogo)

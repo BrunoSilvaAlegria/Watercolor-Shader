@@ -35,18 +35,21 @@ Shader "Custom/Watercolor_Shader"
 
             #pragma vertex vert
             #pragma fragment frag
+            #pragma multi_compile _MAIN_LIGHT_SHADOWS
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 
             struct Attributes
             {
                 float4 positionOS : POSITION;
+                float3 normalOS : NORMAL;
                 float2 uv : TEXCOORD0;
             };
 
             struct Varyings
             {
                 float4 positionHCS : SV_POSITION;
+                float3 normalWS   : TEXCOORD1;
                 float2 uv : TEXCOORD0;
             };
 
@@ -74,6 +77,13 @@ Shader "Custom/Watercolor_Shader"
             half4 frag(Varyings IN) : SV_Target
             {
                 half4 color = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, IN.uv) * _BaseColor;
+
+                //Sample the grain normal with TRANSFORM_TEX to apply tilling and offset to tex coords within material properties
+                half4 grainSample = SAMPLE_TEXTURE2D(_GrainNormal, sampler_GrainNormal, TRANSFORM_TEX(IN.uv, _GrainNormal));
+                half grainLum = dot(grainSample.rgb, half3(0.299, 0.587, 0.114)); //Y(brightness) matrix = more consistent contrast
+                grainLum = saturate(grainLum * _GrainNormalIntensity); //Clamping (basically if value > max value=max, same for minimum)
+                half grainBlend = lerp(1.0h, grainLum, saturate((half)_GrainRoughness)); //_GrainRoughness = 0 -> no grain | _GrainRoughness = 1 -> all grain (grainLum)
+                color *= grainBlend;
                 return color;
             }
             ENDHLSL
