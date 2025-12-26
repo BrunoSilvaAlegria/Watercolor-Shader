@@ -33,10 +33,11 @@ Para obter "manchas" difusas, é necessário ter:
 Para o pigmento ser aplicado, tive de primeiro dar _sample_ da sua textura. Como o pigmento é espalhado e torna-se cada vez mais difuso, fiz com que este varia-se em relação ao espaço(posição, rotação, etc) e não por meio de _UVs_. Também fiz com que o pigmento escurece-se áreas que apanham luz de acordo com a intensidade do mesmo (pigmentos mais fortes podem escurecer áreas iluminadas).  
 Inicialmente, o _shader_ conteve _banding_, que por si só faz com as bordas do pigmento estejam extremamente bem definidas e sem qualquer irregularidade, o que é exatamente o oposto do que se pretende. No entanto, posso usar isso como base e acrescentar _noise_ e suavizar este _banding_ de forma a tornar o seu aspeto mais natural, suave e irregular.  
 
-![Sem pigmento](Images/albedo+grain+shadow.png "Só com o albedo e o grão aplicados (Banding = 3)")
-![Com pigmento](Images/albedo+pigment+grain+shadow.png "Albedo, pigmento e grão aplicados (Banding = 3)")
+![Sem pigmento](Images/albedo+grain+shadow.png "Só com o albedo e o grão aplicados (Banding = 3).")
+![Com pigmento](Images/albedo+pigment+grain+shadow.png "Albedo, pigmento e grão aplicados (Banding = 3).")
+![Banding=5](Images/banding_a_5.png "Banding é igual a 5.")
 
-Já com as bordas suavizadas e _noise_ aplicado,  
+As bordas do _banding_ já estão um pouco mais suaves, mas falta a parte da irregularidade. Para isso, tentei criar um _noise_ por código para não ter de usar outra textura (e para me desafiar) e isso não funcionou como queria, por isso voltei à opção de usar uma textura para o _noise_. 
 
 ## Granulação do Papel
 
@@ -73,10 +74,15 @@ Utilização de IA para tirar dúvidas, consoante a necessidade.
 
 #### Unity
 
-[Produto Interno](https://docs.unity3d.com/Packages/com.unity.shadergraph@6.9/manual/Dot-Product-Node.html)  
+[TRANSFORM_TEX](https://docs.unity3d.com/Packages/com.unity.render-pipelines.universal@8.2/manual/writing-shaders-urp-unlit-texture.html)  
+[Normalize](https://thebookofshaders.com/glossary/?search=normalize)  
+[Dot Product](https://docs.unity3d.com/Packages/com.unity.shadergraph@6.9/manual/Dot-Product-Node.html)  
 [Lerp](https://docs.unity3d.com/ScriptReference/Mathf.Lerp.html)  
 [Saturate](https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-saturate)  
 [Floor](https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-floor)  
+[Max](https://thebookofshaders.com/glossary/?search=max)  
+[Smoothstep](https://thebookofshaders.com/glossary/?search=smoothstep)  
+[FWidth](https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-fwidth)  
 [Luz em Shaders](https://docs.unity3d.com/Packages/com.unity.render-pipelines.universal@14.0/manual/use-built-in-shader-methods-lighting.html)  
 
 #### Outros
