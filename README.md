@@ -2,7 +2,7 @@
 
 ## Introdução
 
-Neste projeto pretende-se alcançar um _shader_ aplicado por objeto que replique o tipo de pintura de aquarela (_watercolor_), especificamente a técnica _wet-on-wet_ e com um granulado do papel presente.
+Neste projeto pretende-se alcançar um _shader_ aplicado por objeto que replique o tipo de pintura de aquarela (_watercolor_), especificamente a técnica _wet-on-wet_ e com um granulado do papel presente. Tenho como principal referência este [projeto de Renee Harris](http://www.reneeharris.co.nz/2024/02/watercolor-shader-experiments-part-1.html)  
 
 ### O que é a técnica _wet-on-wet_?
 
@@ -19,15 +19,24 @@ Esta técnica trata-se de quando se aplica um pincel molhado de tinta/pigmento n
 
 ### Diagrama inicial
 
-Esta é a estrutura inicialmente feita para o desenvolvimento deste _shader_.
+Esta é a estrutura inicialmente feita para o desenvolvimento deste _shader_.  
 
 ---
 
 ## Manchas de cor difusas
 
-## Mistura de cores nas bordas
+Para obter "manchas" difusas, é necessário ter:  
 
-## _Bloom_
+- A textura do pigmento.  
+- Bordas suaves e irregulares
+
+Para o pigmento ser aplicado, tive de primeiro dar _sample_ da sua textura. Como o pigmento é espalhado e torna-se cada vez mais difuso, fiz com que este varia-se em relação ao espaço(posição, rotação, etc) e não por meio de _UVs_. Também fiz com que o pigmento escurece-se áreas que apanham luz de acordo com a intensidade do mesmo (pigmentos mais fortes podem escurecer áreas iluminadas).  
+Inicialmente, o _shader_ conteve _banding_, que por si só faz com as bordas do pigmento estejam extremamente bem definidas e sem qualquer irregularidade, o que é exatamente o oposto do que se pretende. No entanto, posso usar isso como base e acrescentar _noise_ e suavizar este _banding_ de forma a tornar o seu aspeto mais natural, suave e irregular.  
+
+![Sem pigmento](Images/albedo+grain+shadow.png "Só com o albedo e o grão aplicados (Banding = 3)")
+![Com pigmento](Images/albedo+pigment+grain+shadow.png "Albedo, pigmento e grão aplicados (Banding = 3)")
+
+Já com as bordas suavizadas e _noise_ aplicado,  
 
 ## Granulação do Papel
 
@@ -45,17 +54,7 @@ Fiz também um _saturate_ para limitar o valor máximo e mínimo possível de se
 No entanto, notei que a luz não estava a influenciar os objetos onde o material com o _shader_ estava aplicado.  
 
 ![Grain](Images/Grain_no_light_effect.png "Vê-se o grão.")
-![Grain no light effect](Images/Grain_no_light_effect2.png "Vê-se o grão mas não há influência da luz.")
-
-## Luz
-
-Para que haja influência da luz simples, é preciso incluir o _package_ _Lighting_ para ser possível chamar a luz principal da cena por meio do método _GetMainLight()_ (presente no ficheiro _RealtimeLights.hlsl_ importado quando se importa o _package_ mencionado anteriormente) no _vertex shader_. São também chamados o método _GetVertexNormalInputs_ para obter as normais em _world space_ em relação aos vértices do objeto, e o _LightingLambert_ para calcular quanta luz cada vértice recebe.  
-Inicialmente a cor apenas aparecia onde a sombra estaria, isto devido a estar a adicionar à _color_ um _float4_ com a _lightAmount_ e uma opacidade. Bastou multiplicar em vez de adicionar para obter o resultado correto (cor e sombras nos lados corretos).  
-
-![Cores do lado da sombra](Images/Cores_do_lado_da_sombra.png "Após adição.")
-![Cores e sombras do lado certo](Images/Cores_e_sombras_do_lado_certo.png "Após multiplicação.")
-
-Neste momento, a sombra encontra-se muito intensa.  
+![Grain no light effect](Images/Grain_no_light_effect2.png) "Vê-se o grão mas não há influência da luz."  
 
 ---
 
@@ -76,10 +75,13 @@ Utilização de IA para tirar dúvidas, consoante a necessidade.
 
 [Produto Interno](https://docs.unity3d.com/Packages/com.unity.shadergraph@6.9/manual/Dot-Product-Node.html)  
 [Lerp](https://docs.unity3d.com/ScriptReference/Mathf.Lerp.html)  
-[Saturação(Método saturate)(não encontrei informação na documentação do Unity)](https://en.wikipedia.org/wiki/Saturation_arithmetic)  
-[Luz em Shaders](https://docs.unity3d.com/Packages/com.unity.render-pipelines.universal@14.0/manual/use-built-in-shader-methods-lighting.html)
+[Saturate](https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-saturate)  
+[Floor](https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-floor)  
+[Luz em Shaders](https://docs.unity3d.com/Packages/com.unity.render-pipelines.universal@14.0/manual/use-built-in-shader-methods-lighting.html)  
 
 #### Outros
 
+[Documentação sobre HLSL](https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-reference)
+[Semântica dos Vertex e Pixel shaders](https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-semantics)
 [Espaço de cores YIQ](https://en.wikipedia.org/wiki/YIQ)  
 [Conversão RGB para HSV(YIQ)](https://www.youtube.com/watch?v=kiSKb54cogo)  
