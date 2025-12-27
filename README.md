@@ -2,7 +2,7 @@
 
 ## Introdução
 
-Neste projeto pretende-se alcançar um _shader_ aplicado por objeto que replique o tipo de pintura de aquarela (_watercolor_), especificamente a técnica _wet-on-wet_ e com um granulado do papel presente. Tenho como principal referência este [projeto de Renee Harris](http://www.reneeharris.co.nz/2024/02/watercolor-shader-experiments-part-1.html)  
+Neste projeto pretende-se alcançar um _shader_ aplicado por objeto que replique o tipo de pintura de aquarela (_watercolor_), especificamente a técnica _wet-on-wet_ e com um granulado do papel presente. Tenho como principal referência este [projeto de Renee Harris.](http://www.reneeharris.co.nz/2024/02/watercolor-shader-experiments-part-1.html)  
 
 ### O que é a técnica _wet-on-wet_?
 
@@ -37,7 +37,17 @@ Inicialmente, o _shader_ conteve _banding_, que por si só faz com as bordas do 
 ![Com pigmento](Images/albedo+pigment+grain+shadow.png "Albedo, pigmento e grão aplicados (Banding = 3).")
 ![Banding=5](Images/banding_a_5.png "Banding é igual a 5.")
 
-As bordas do _banding_ já estão um pouco mais suaves, mas falta a parte da irregularidade. Para isso, tentei criar um _noise_ por código para não ter de usar outra textura (e para me desafiar) e isso não funcionou como queria, por isso voltei à opção de usar uma textura para o _noise_. 
+As bordas do _banding_ já estão um pouco mais suaves, mas falta a parte da irregularidade. Para isso, tentei criar um _noise_ por código para não ter de usar outra textura (e para me desafiar) e isso não funcionou como queria, por isso voltei à opção de usar uma textura para o _noise_.  
+Foi aqui que me apercebi do que estava a fazer de mal. Estava a usar a luz, especificamente a direção da mesma, para determinar onde havia manchas e as suas bordas, o que não é o que se pretende. Corrigi isso multiplicando a textura do pigmento pela sua intensidade (somada a um valor para que não fica-se demasiado escura).  
+
+## Mistura de cores
+
+Após investigação e falar com IA, cheguei à conclusão que havia dois caminhos possíveis que podia seguir a partir daqui:  
+
+- _Fake Mix_ -> Usando duas texturas de pigmento que onde fazem _overlap_, subtraem-se instantaneamente para formar uma nova cor (porém não faz nem _bleending_ nem _bloom_).
+- Simulação Mínima -> Usa-se também dois pigmentos mas que se espalham de forma natural ao longo do tempo, por onde houver manchas (nas texturas), e que quando se tocam as suas cores substraem-se e fazem _bleeding_ e _bloom_. Requer um _script_ de C# para determinar como a simulação corre.  
+
+
 
 ## Granulação do Papel
 
