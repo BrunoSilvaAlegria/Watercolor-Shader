@@ -5,3 +5,7 @@ Stylized ground with grass and stones, licensed by CC Attribution, by ralez - ht
 Qwantani Dusk 2 (Pure Sky), licensed by CC0, by Greg Zaal and Jarod Guest - https://polyhaven.com/a/qwantani_dusk_2_puresky
 
 Paper Grain Texture, licensed by Unplash (CC), by Olga Thelavart - https://unsplash.com/pt-br/fotografias/parede-pintada-de-branco-com-linha-preta-vS3idIiYxX0  
+
+Voronoi 3 Noise Texture, licensed by CC0 - https://opengameart.org/content/noise-texture-pack-voronoi-3-512x512png
+
+Pigments were made by me.

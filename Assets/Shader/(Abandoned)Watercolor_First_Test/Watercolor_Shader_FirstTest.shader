@@ -1,9 +1,17 @@
-Shader "Custom/Watercolor_Shader"
+Shader "Custom/Watercolor_Shader_FirstTest"
 {
     Properties
     {
         //Original color texture
         _DiffuseColor("Diffuse Color", Color) = (1,1,1,1)
+        _AlbedoMap("Albedo Map", 2D) = "white" {}
+
+        //Watercolor properties
+        _Pigment1("Pigment Texture 1", 2D) = "black" {} //Pigment type 1 (staining)
+        _Pigment2("Pigment Texture 2", 2D) = "black" {} //Pigment type 2 (staining)
+        _Pigment1Strength("Pigment 1 Strength", Range(0, 1)) = 1 //Manages how strong the pigment 1 effect is
+        _Pigment2Strength("Pigment 2 Strength", Range(0, 1)) = 1 //Manages how strong the pigment 2 effect is
+        _EdgeDarkening("Edge Darkening Amount", Float) = 1 //Manages how dark the banding edges are
 
         //Paper Granulation properties
         _GrainNormal("Grain Texture", 2D) = "white" {} //Height or Normal texture
@@ -52,12 +60,23 @@ Shader "Custom/Watercolor_Shader"
                 float4 shadowCoord : TEXCOORD2;
             };
 
+            TEXTURE2D(_AlbedoMap);
+            SAMPLER(sampler_AlbedoMap);
+            TEXTURE2D(_Pigment1);
+            SAMPLER(sampler_Pigment1);
+            TEXTURE2D(_Pigment2);
+            SAMPLER(sampler_Pigment2);
             TEXTURE2D(_GrainNormal);
             SAMPLER(sampler_GrainNormal);
 
             CBUFFER_START(UnityPerMaterial)
-                float4 _DiffuseColor;                
                 float4 _GrainNormal_ST;
+                float4 _Pigment1_ST;
+                float4 _Pigment2_ST;
+                float4 _DiffuseColor;
+                float _Pigment1Strength;
+                float _Pigment2Strength;
+                float _EdgeDarkening;
                 float _GrainRoughness;
             CBUFFER_END
 
@@ -76,7 +95,8 @@ Shader "Custom/Watercolor_Shader"
             half4 frag(Varyings IN) : SV_Target
             {
                 //Diffuse color
-                half4 color = _DiffuseColor;
+                //half4 color = SAMPLE_TEXTURE2D(_AlbedoMap, sampler_AlbedoMap, IN.uv).rgb;
+                //half4 color = _DiffuseColor;
                 
                 //Grain
                 //Sample the grain normal with TRANSFORM_TEX to apply tilling and offset to tex coords within material properties
@@ -84,7 +104,12 @@ Shader "Custom/Watercolor_Shader"
                 half grainLum = dot(grain.rgb, half3(0.299, 0.587, 0.114)); //Y(brightness) matrix = more consistent contrast
                 //half grainLum_saturated = saturate(grainLum * _GrainNormalIntensity); //Clamping (basically if value > max value=max, same for minimum)
                 half grainBlend = lerp(1.0h, grainLum, saturate((half)_GrainRoughness)); //_GrainRoughness = 0 -> no grain | _GrainRoughness = 1 -> all grain (grainLum)
-                color *= grainBlend;
+                //color *= grainBlend;
+                
+                //Pigment 
+                float4 pigment1 = SAMPLE_TEXTURE2D (_Pigment1, sampler_Pigment1, TRANSFORM_TEX(IN.uv, _Pigment1));
+                float4 pigment2 = SAMPLE_TEXTURE2D(_Pigment2, sampler_Pigment2, TRANSFORM_TEX(IN.uv, _Pigment2));
+                float4 watercolor = exp(-pigment1 * _Pigment1Strength) / exp(-pigment2 * _Pigment2Strength); //Beer–Lambert law (subtractive watercolor)
 
                 //Lighting
                 Light light = GetMainLight(IN.shadowCoord); //Get the properties of the main light (directional) for the shadow coordinates
@@ -93,7 +118,13 @@ Shader "Custom/Watercolor_Shader"
                 float NdotL = saturate(dot(IN.normalWS, lightDirection));
                 NdotL *= shadows;
 
-                return color * NdotL;
+                //Edge darkening
+                float edgeDarkening = lerp(1, saturate(dot(normalize(IN.normalWS), float3(0,1,0))), _EdgeDarkening);
+                //color *= edgeDarkening;
+
+                half3 finalColor = edgeDarkening * grainBlend * watercolor * NdotL;
+
+                return half4(finalColor, watercolor.a);
 
             }
             ENDHLSL

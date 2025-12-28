@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Watercolor 2
+  m_Name: Watercolor_FirstTest
   m_Shader: {fileID: 4800000, guid: bdd19dbf5dddc624c86433343ebca984, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -25,7 +25,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _AlbedoMap:
-        m_Texture: {fileID: 2800000, guid: 5e278506eb39c464a9dc61c6680009f2, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BandingNoise:
@@ -62,7 +62,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _GrainNormal:
         m_Texture: {fileID: 2800000, guid: 5feefa275d1d769408ec412c91dd3101, type: 3}
-        m_Scale: {x: 1, y: 0.44}
+        m_Scale: {x: 0.5, y: 0.5}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 0}
@@ -81,7 +81,15 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Pigment:
-        m_Texture: {fileID: 2800000, guid: 5fa1f776563852248a8c06ad7de0d377, type: 3}
+        m_Texture: {fileID: 2800000, guid: a4288b0ff3ef0b04f92d09cb641cbd20, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Pigment1:
+        m_Texture: {fileID: 2800000, guid: a4288b0ff3ef0b04f92d09cb641cbd20, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Pigment2:
+        m_Texture: {fileID: 2800000, guid: fc96dcf0343f24642a71017b991eed3f, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
@@ -109,9 +117,9 @@ Material:
     - _AddPrecomputedVelocity: 0
     - _AlphaClip: 0
     - _AlphaToMask: 0
-    - _Banding: 4.65
+    - _Banding: 1
     - _BandingNoise: 1
-    - _BandingSoftness: 0.517
+    - _BandingSoftness: 0.345
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
     - _BumpScale: 1
@@ -125,17 +133,19 @@ Material:
     - _DryingSpeed: 1
     - _DstBlend: 0
     - _DstBlendAlpha: 0
-    - _EdgeDarkening: 0
+    - _EdgeDarkening: -0.79
     - _EnvironmentReflections: 1
     - _FlowSpeed: 1
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
     - _GrainNormalIntensity: 1
-    - _GrainRoughness: 1
+    - _GrainRoughness: 0
     - _Metallic: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.005
+    - _Pigment1Strength: 1
+    - _Pigment2Strength: 1
     - _PigmentStrenght: 0.5
     - _PigmentStrength: 1
     - _QueueOffset: 0
@@ -150,8 +160,9 @@ Material:
     - _XRMotionVectorsPass: 1
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 1, g: 0.5518868, b: 0.5518868, a: 1}
+    - _BaseColor: {r: 1, g: 0.3160377, b: 0.3160377, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _DiffuseColor: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []
