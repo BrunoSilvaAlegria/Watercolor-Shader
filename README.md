@@ -45,7 +45,7 @@ Esta é a estrutura inicialmente feita para o desenvolvimento deste _shader_.
 
 ## Primeira tentativa - Ideia inicial
 
-Esta foi a minha primeira tentativa de construir o _shader_ com a ideia inicial, que entretanto foi abandonada e segui para a nova ideia, que começa no tópico "Segunda Tentativa (com foco do projeto mudado) - Ideia modificada".
+Esta foi a minha primeira tentativa de construir o _shader_ com a ideia inicial, que entretanto foi abandonada e segui para a nova ideia, que começa no tópico "Segunda Tentativa - Ideia modificada".
 
 ### Manchas de cor difusas
 
@@ -98,6 +98,18 @@ No entanto, notei que a luz não estava a influenciar os objetos onde o material
 
 ### Sombras
 
+Para as sombras, fiz com que fosse possível controlar a sua cor, fazendo uma distinção entre a cor na parte iluminada do objeto e a cor na parte sombreada do objeto:  
+
+- A cor da parte iluminada trata-se da multiplicação do RGB da cor difusa pela própria luz, e depois somada à cor ambiente.  
+- A cor da parte sombreada é apenas uma multiplicação entre a cor da parte iluminada e a cor da sombra em si.  
+
+Tive um principal problema inicialmente. As sombras estavam a quebrar mas apenas em alguns ângulos.  
+
+![Sombras quebradas](Images/sombra_queb1.png "No objeto principal.")
+![Sombras quebradas 2](Images/sombra_queb2.png "Numa esfera.")
+
+
+
 ### _Outline_
 
 Este _outline_ aceita uma cor e uma grossura, que podem ser modificadas diretamente no material.
@@ -106,7 +118,7 @@ Tive um problema com este elemento, que foi o porquê de o _outline_ apenas ser 
 ![Outline total](Images/outline_total.png "Vê-se todo o outline.")
 ![Outline parcial](Images/Outline_parcial.png "Vê-se apenas parte do outline.")
 
-Resolvi essa questão passando a extrudar com as _world-space normals_ em vez das _view-space normals_ (simplificar, basicamente).   
+Resolvi essa questão passando a extrudar com as _world-space normals_ em vez das _view-space normals_ (simplificar, basicamente).  
 
 Passou disto:  
 ![Código do outline antigo](Images/code_outline_bad.png)

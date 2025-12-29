@@ -43,6 +43,7 @@ Shader "Custom/Watercolor_Shader"
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS_CASCADE
             #pragma multi_compile _ _SHADOWS_SOFT
+            
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
@@ -94,7 +95,6 @@ Shader "Custom/Watercolor_Shader"
             half4 frag(Varyings IN) : SV_Target
             {
                 //Diffuse color
-                //half4 color = _DiffuseColor;
                 half4 color = SAMPLE_TEXTURE2D(_AlbedoTex, sampler_AlbedoTex, TRANSFORM_TEX(IN.uv, _AlbedoTex));
                 
                 //Grain
@@ -104,23 +104,31 @@ Shader "Custom/Watercolor_Shader"
                 half grainBlend = lerp(1.0h, grainLum, saturate((half)_GrainRoughness)); //_GrainRoughness = 0 -> no grain | _GrainRoughness = 1 -> all grain (grainLum)
 
                 //Lighting
-                float3 ambient = SampleSH(IN.normalWS); //Ambient
+                float3 ambient = SampleSH(IN.normalWS); //Ambient sampled with spherical harmonics
                 
                 Light light = GetMainLight(IN.shadowCoord); //Get the properties of the main light (directional) for the shadow coordinates
-                float shadows = light.shadowAttenuation; //Light attenuation
+                float lighting = saturate(dot(IN.normalWS, normalize(light.direction)));
+                float shadows = light.shadowAttenuation; //Shadow attenuation
+                lighting *= shadows;
 
                 //Double smoothstep flattens lighting, exaggerates mid-tones and removes hard falloff.
                 shadows = smoothstep(0.7, 1.5, shadows * 2);
                 shadows = smoothstep(0.2, 0.8, shadows);                 
                 
-                float3 texColor = lerp(color.rgb, _ShadowColor + ambient, 0);
-                texColor = lerp(texColor, 1, 1- color.a);
+                //float3 texColor = lerp(color.rgb, _ShadowColor + ambient, 0);
+                //texColor = lerp(texColor, 1, 1- color.a);
                 
-                float3 diffuse = _DiffuseColor.rgb * smoothstep(0.35, 0.4, texColor) * texColor;
-                float3 diffuseTemp = ambient + diffuse - ((1 - shadows) * (1 - _ShadowColor)) * _ShadowColor.a;
-                diffuseTemp *= grainBlend;
+                float3 litColor = ambient + (_DiffuseColor.rgb * lighting);
+                float3 shadowedColor = litColor * _ShadowColor;
 
-                return float4(diffuseTemp, 1);
+                float3 finalColor = lerp(shadowedColor, litColor, shadows);
+                finalColor *= grainBlend;
+                //float3 diffuse = _DiffuseColor.rgb * smoothstep(0.35, 0.4, texColor) * texColor;
+                
+                //float3 diffuseTemp = (ambient + diffuse) * _ShadowColor.rgb;
+                //diffuseTemp *= grainBlend;
+
+                return float4(finalColor, 1);
 
             }
             ENDHLSL
