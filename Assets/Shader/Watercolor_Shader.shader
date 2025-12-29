@@ -54,7 +54,6 @@ Shader "Custom/Watercolor_Shader"
                 float4 positionOS : POSITION;
                 float3 normalOS : NORMAL;
                 float2 uv : TEXCOORD0;
-                float4 positionWS : TEXCOORD1;
             };
 
             struct Varyings
@@ -83,11 +82,20 @@ Shader "Custom/Watercolor_Shader"
             {
                 Varyings OUT;
                 
-                OUT.positionHCS = TransformObjectToHClip(IN.positionOS.xyz); //Object space to homogenous space    
-                OUT.positionWS = TransformObjectToWorld(IN.positionOS.xyz);
-                OUT.normalWS = TransformObjectToWorldNormal(IN.normalOS);
+                VertexPositionInputs pos = GetVertexPositionInputs(IN.positionOS.xyz);
+                VertexNormalInputs norms = GetVertexNormalInputs(IN.normalOS);
+
+                OUT.positionHCS = pos.positionCS;
+                OUT.positionWS = pos.positionWS;
+                OUT.normalWS = norms.normalWS;
                 OUT.uv = IN.uv;
-                OUT.shadowCoord = TransformWorldToShadowCoord(IN.positionWS);
+                OUT.shadowCoord = GetShadowCoord(pos); 
+
+                //OUT.positionHCS = TransformObjectToHClip(IN.positionOS.xyz); //Object space to homogenous space    
+                //OUT.positionWS = TransformObjectToWorld(IN.positionOS.xyz);
+                //OUT.normalWS = TransformObjectToWorldNormal(IN.normalOS);
+
+                //OUT.shadowCoord = TransformWorldToShadowCoord(IN.positionWS);
             
                 return OUT;
             }
@@ -109,11 +117,11 @@ Shader "Custom/Watercolor_Shader"
                 Light light = GetMainLight(IN.shadowCoord); //Get the properties of the main light (directional) for the shadow coordinates
                 float lighting = saturate(dot(IN.normalWS, normalize(light.direction)));
                 float shadows = light.shadowAttenuation; //Shadow attenuation
-                lighting *= shadows;
+                //lighting *= shadows;
 
                 //Double smoothstep flattens lighting, exaggerates mid-tones and removes hard falloff.
-                shadows = smoothstep(0.7, 1.5, shadows * 2);
-                shadows = smoothstep(0.2, 0.8, shadows);                 
+                //shadows = smoothstep(0.7, 1.5, shadows*2);
+                //shadows = smoothstep(0.2, 0.8, shadows);                 
                 
                 //float3 texColor = lerp(color.rgb, _ShadowColor + ambient, 0);
                 //texColor = lerp(texColor, 1, 1- color.a);
