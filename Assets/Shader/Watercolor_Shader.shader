@@ -4,6 +4,11 @@ Shader "Custom/Watercolor_Shader"
     {
         //Original color texture
         _DiffuseColor("Diffuse Color", Color) = (1,1,1,1)
+        _AlbedoTex("Albedo Texture", 2D) = "white" {}
+
+        //Outline
+        _OutlineAmount("Outline Amount", Range(0, 1)) = 0.25
+        _OutlineColor("Outline Color", Color) = (0.5,0.5,0.5,1)
 
         //Paper Granulation properties
         _GrainNormal("Grain Texture", 2D) = "white" {} //Height or Normal texture
@@ -21,12 +26,12 @@ Shader "Custom/Watercolor_Shader"
 
         Pass
         {
-            Name "UniversalForward"
+            Name "Watery Shadows"
             Tags { "LightMode" = "UniversalForward" }
 
             Cull Back
-            ZWrite On
-            ZTest LEqual
+            //ZWrite On
+            //ZTest LEqual
             Blend One Zero //Opaque
 
             HLSLPROGRAM
@@ -52,11 +57,14 @@ Shader "Custom/Watercolor_Shader"
                 float4 shadowCoord : TEXCOORD2;
             };
 
+            TEXTURE2D(_AlbedoTex);
+            SAMPLER(sampler_AlbedoTex);
             TEXTURE2D(_GrainNormal);
             SAMPLER(sampler_GrainNormal);
 
             CBUFFER_START(UnityPerMaterial)
-                float4 _DiffuseColor;                
+                float4 _DiffuseColor; 
+                float4 _AlbedoTex_ST;               
                 float4 _GrainNormal_ST;
                 float _GrainRoughness;
             CBUFFER_END
@@ -76,7 +84,8 @@ Shader "Custom/Watercolor_Shader"
             half4 frag(Varyings IN) : SV_Target
             {
                 //Diffuse color
-                half4 color = _DiffuseColor;
+                //half4 color = _DiffuseColor;
+                half4 color = SAMPLE_TEXTURE2D(_AlbedoTex, sampler_AlbedoTex, TRANSFORM_TEX(IN.uv, _AlbedoTex));
                 
                 //Grain
                 //Sample the grain normal with TRANSFORM_TEX to apply tilling and offset to tex coords within material properties
@@ -95,6 +104,60 @@ Shader "Custom/Watercolor_Shader"
 
                 return color * NdotL;
 
+            }
+            ENDHLSL
+        }
+
+        Pass
+        {
+            Name "Outline"
+
+            Cull Front
+
+            HLSLPROGRAM
+
+            #pragma vertex vert
+            #pragma fragment frag
+
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+                       
+            struct Attributes
+            {
+                float4 positionOS : POSITION;
+                float3 normalOS : NORMAL;
+            };
+
+            struct Varyings
+            {
+                float4 positionHCS : SV_POSITION;
+                float3 positionWS : TEXCOORD3;
+            };  
+
+            CBUFFER_START(UnityPerMaterial)
+                float _OutlineAmount;
+                float4 _OutlineColor;
+            CBUFFER_END
+
+            Varyings vert(Attributes IN)
+            {
+                Varyings OUT;
+
+                float3 worldPos = TransformObjectToWorld(IN.positionOS.xyz);
+                float3 normalWS = TransformObjectToWorldNormal(IN.normalOS);
+
+                worldPos += float4(normalize(normalWS), 0) * _OutlineAmount;
+                OUT.positionHCS = TransformWorldToHClip(worldPos);
+                OUT.positionWS = worldPos;
+ 
+                return OUT;
+            }
+
+            half4 frag(Varyings IN) : SV_Target
+            {
+                half4 outlineColor = _OutlineColor;
+
+                return _OutlineColor;
             }
             ENDHLSL
         }

@@ -1,5 +1,9 @@
 # _**Watercolor Shader**_ - Relatório
 
+Por Bruno Alegria.  
+
+---
+
 ## Introdução
 
 ### Ideia inicial
@@ -11,7 +15,7 @@ Esta ideia foi entretanto alterada.
 
 Decidi modificar a ideia inicial para tornar este projeto diferente e mais original. Continua a ser  um _shader_ aplicado por objeto, mas utilizado de forma mais abstrata.  
 Assim, pretendo utilizar a humidade característica desta técnica mencionada anteriormente nas sombras, de forma a criar manchas e com arestas concentradas(ou seja, com mais "água").  
-Também pretendo ter um _outline_, já que é um elemento comum quando se cria este tipo de _shader_ e chama mais à atenção.  
+Também pretendo ter um _outline_, já que é um elemento comum quando se cria este tipo de _shader_ e chama mais à atenção. Normalmente este tipo de _shader_ é acompanhado de um _toon shader_, _cel shading_ e/ou de _outlines_.  
 Para além disso, continuo a querer ter o granulado do papel.  
 
 ### O que é a técnica _wet-on-wet_?
@@ -90,11 +94,29 @@ No entanto, notei que a luz não estava a influenciar os objetos onde o material
 
 ---
 
-## Segunda Tentativa (com foco do projeto mudado) - Ideia modificada
+## Segunda Tentativa - Ideia modificada
 
 ### Sombras
 
 ### _Outline_
+
+Este _outline_ aceita uma cor e uma grossura, que podem ser modificadas diretamente no material.
+Tive um problema com este elemento, que foi o porquê de o _outline_ apenas ser vísivel de certos ângulos.
+
+![Outline total](Images/outline_total.png "Vê-se todo o outline.")
+![Outline parcial](Images/Outline_parcial.png "Vê-se apenas parte do outline.")
+
+Resolvi essa questão passando a extrudar com as _world-space normals_ em vez das _view-space normals_ (simplificar, basicamente).   
+
+Passou disto:  
+![Código do outline antigo](Images/code_outline_bad.png)
+
+Para isto:  
+![Código do outline novo](Images/code_outline_good.png)
+
+Agora vê-se todo o _outline_ independentemente de onde se está a olhar.  
+
+![Vista de cena outline](Images/outline_scene_view.png "Vê-se todo o outline de todos objetos.")
 
 ### Granulado do Papel
 
@@ -118,7 +140,8 @@ Utilização de IA para tirar dúvidas, consoante a necessidade.
 [Watercolor Shader Experiments (Part 1) by Renne Harris](http://www.reneeharris.co.nz/2024/02/watercolor-shader-experiments-part-1.html)  
 
 #### Unity
-  
+
+[Múltlipas variáveis built-in de shaders](https://docs.unity3d.com/6000.3/Documentation/Manual/SL-UnityShaderVariables.html)    
 [TRANSFORM_TEX](https://docs.unity3d.com/Packages/com.unity.render-pipelines.universal@8.2/manual/writing-shaders-urp-unlit-texture.html)  
 [Normalize](https://thebookofshaders.com/glossary/?search=normalize)  
 [Dot Product](https://docs.unity3d.com/Packages/com.unity.shadergraph@6.9/manual/Dot-Product-Node.html)  
