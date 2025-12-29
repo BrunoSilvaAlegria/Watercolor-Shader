@@ -141,7 +141,7 @@ Utilização de IA para tirar dúvidas, consoante a necessidade.
 
 #### Unity
 
-[Múltlipas variáveis built-in de shaders](https://docs.unity3d.com/6000.3/Documentation/Manual/SL-UnityShaderVariables.html)    
+[Múltiplas variáveis built-in de shaders](https://docs.unity3d.com/6000.3/Documentation/Manual/SL-UnityShaderVariables.html)    
 [TRANSFORM_TEX](https://docs.unity3d.com/Packages/com.unity.render-pipelines.universal@8.2/manual/writing-shaders-urp-unlit-texture.html)  
 [Normalize](https://thebookofshaders.com/glossary/?search=normalize)  
 [Dot Product](https://docs.unity3d.com/Packages/com.unity.shadergraph@6.9/manual/Dot-Product-Node.html)  
