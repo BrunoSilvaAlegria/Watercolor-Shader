@@ -1,6 +1,6 @@
 # _**Watercolor Shader**_ - Relatório
 
-Por Bruno Alegria.  
+Por Bruno Alegria  
 
 ---
 
@@ -176,7 +176,7 @@ Utilização de IA para tirar dúvidas, consoante a necessidade.
 [Floor](https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-floor)  
 [Max](https://thebookofshaders.com/glossary/?search=max)  
 [Smoothstep](https://thebookofshaders.com/glossary/?search=smoothstep)  
-[FWidth](https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-fwidth)
+[FWidth](https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-fwidth)  
 [Exp](https://thebookofshaders.com/glossary/?search=exp)  
 [Luz em Shaders](https://docs.unity3d.com/Packages/com.unity.render-pipelines.universal@14.0/manual/use-built-in-shader-methods-lighting.html)  
 [Precisão fixa - tipo "fixed"](https://docs.unity3d.com/2022.3/Documentation/Manual/SL-DataTypesAndPrecision.html)  
