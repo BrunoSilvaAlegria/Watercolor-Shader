@@ -100,7 +100,7 @@ No entanto, notei que a luz não estava a influenciar os objetos onde o material
 
 Para as sombras, fiz com que fosse possível controlar a sua cor, fazendo uma distinção entre a cor na parte iluminada do objeto e a cor na parte sombreada do objeto:  
 
-- A cor da parte iluminada trata-se da multiplicação do RGB da cor difusa pela própria luz, e depois somada à cor ambiente.  
+- A cor da parte iluminada trata-se da multiplicação do RGB da cor difusa pela própria luz, e depois somada à cor ambiente (extraído com _spherical harmonics_).  
 - A cor da parte sombreada é apenas uma multiplicação entre a cor da parte iluminada e a cor da sombra em si.  
 
 Tive um principal problema inicialmente. As sombras estavam a quebrar mas apenas em alguns ângulos.  
@@ -108,11 +108,25 @@ Tive um principal problema inicialmente. As sombras estavam a quebrar mas apenas
 ![Sombras quebradas](Images/sombra_queb1.png "No objeto principal.")
 ![Sombras quebradas 2](Images/sombra_queb2.png "Numa esfera.")
 
+Tentando corrigir isto, exagerei valores presentes nos _smoothsteps_ que definem as sombras para detetar onde as sombras estavam supostamente a aparecer. Chegando à conclusão que não era aqui que estava o problema, alterei a forma como a cor da parte sombreada era calculada para uma multiplicação da cor base pela cor das sombras, sendo somada metade da cor ambiente, e retirei por completo os _smoothsteps_.  
 
+![Smoothstep com valores exagerados](Images/smoothstep.png "Valores exagerados na definição das sombras.")
+
+Procurei então alterar no _vertex shader_ a forma como as coordenadas das sombras eram passadas. Decidi usar as posições e normais por vértice para registar as posições em _world-space_ e passar essas posições para o tranformador para coordenadas de sombra (_TransformWorldToShadowCoord_). Isso não resolveu o problema, mas alterou-o. Agora a sombra mal aparece!  
+
+![Problema alterado](Images/problema2.png)
+
+O problema foi (FINALMENTE) resolvido fazendo um segundo _Pass_ cujo _LightMode_ é _ShadowCaster_ especificamente para que as sombras sejam corretamente aplicadas. Usei a posição e as normais em _world-space_, juntamente com a direção da luz principal (neste caso, a luz direcional) para garantir que as sombras corretamente. O _bias_ destas podem ser alteradas no inspetor, conforme quanto quer-se que a luz aplique ao longo da normais das superfícies que ilumina.  
+
+![Bias](Images/bias.png "Sombras corretas (a verde) com bias ajustado.")
+
+Não é uma solução perfeita, pois a partir de uma distância e/ou ângulo há um corte da sombra. Mas para efeitos deste projeto, é funcional.
+
+![Corte da sombra](Images/corte_sombra.png "Corte da sombra.")
 
 ### _Outline_
 
-Este _outline_ aceita uma cor e uma grossura, que podem ser modificadas diretamente no material.
+Este _outline_ foi feito num terceiro _Pass_ e aceita uma cor e uma grossura, que podem ser modificadas diretamente no material.
 Tive um problema com este elemento, que foi o porquê de o _outline_ apenas ser vísivel de certos ângulos.
 
 ![Outline total](Images/outline_total.png "Vê-se todo o outline.")
@@ -153,7 +167,7 @@ Utilização de IA para tirar dúvidas, consoante a necessidade.
 
 #### Unity
 
-[Múltiplas variáveis built-in de shaders](https://docs.unity3d.com/6000.3/Documentation/Manual/SL-UnityShaderVariables.html)    
+[Múltiplas variáveis built-in de shaders](https://docs.unity3d.com/6000.3/Documentation/Manual/SL-UnityShaderVariables.html)  
 [TRANSFORM_TEX](https://docs.unity3d.com/Packages/com.unity.render-pipelines.universal@8.2/manual/writing-shaders-urp-unlit-texture.html)  
 [Normalize](https://thebookofshaders.com/glossary/?search=normalize)  
 [Dot Product](https://docs.unity3d.com/Packages/com.unity.shadergraph@6.9/manual/Dot-Product-Node.html)  
