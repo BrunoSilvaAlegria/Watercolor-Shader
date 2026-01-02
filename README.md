@@ -37,10 +37,6 @@ Esta técnica trata-se de quando se aplica um pincel molhado de tinta/pigmento n
 - _Outline_.
 - Aplicar o granulado do papel nos objetos.
 
-### Diagrama inicial
-
-Esta é a estrutura inicialmente feita para o desenvolvimento deste _shader_.  
-
 ---
 
 ## Primeira tentativa - Ideia inicial
