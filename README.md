@@ -142,7 +142,7 @@ Agora vê-se todo o _outline_ independentemente de onde se está a olhar.
 
 ### Granulado do Papel
 
-Mantive a lógica da primeira tentativa mas retirei a _GrainNormalIntensity_, pois percebi que estava a alcançar o resultado pretendido só com a _GrainRoughness_.    
+Mantive a lógica da primeira tentativa mas retirei a _GrainNormalIntensity_, pois percebi que estava a alcançar um resultado suficiente só com a _GrainRoughness_.  
 
 ---
 
