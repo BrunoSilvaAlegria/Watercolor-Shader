@@ -8,7 +8,7 @@ Por Bruno Alegria
 
 ### Ideia inicial
 
-Neste projeto pretende-se alcançar um _shader_ aplicado por objeto que replique o tipo de pintura de aquarela (_watercolor_), especificamente a técnica _wet-on-wet_ e com um granulado do papel presente.  
+Neste projeto pretende-se alcançar um _shader_ aplicado por objeto que replique o tipo de pintura de aguarela (_watercolor_), especificamente a técnica _wet-on-wet_ e com um granulado do papel presente.  
 Esta ideia foi entretanto alterada.
 
 ### Ideia modificada
@@ -142,7 +142,15 @@ Agora vê-se todo o _outline_ independentemente de onde se está a olhar.
 
 ### Granulado do Papel
 
-Mantive a lógica da primeira tentativa mas retirei a _GrainNormalIntensity_ pois não fazia diferença estar lá ou não.  
+Mantive a lógica da primeira tentativa mas retirei a _GrainNormalIntensity_, pois percebi que estava a alcançar o resultado pretendido só com a _GrainRoughness_.    
+
+---
+
+## Conclusão
+
+Em primeiro lugar, gostei bastante desta experiência. Foi a minha primeira vez a construir um _shader_ deste género e por mim mesmo, e levou-me a pensar de forma diferente, diria até que mais abstrata, sobre pormenores que nunca tinha olhado para eles assim. Foi também esta forma de pensar que me levou a alterar a ideia inicial do projeto, olhando para as propriedades da pintura em aguarela e da técnica escolhida, e pensar como posso aplicá-as de forma mais original e não de forma tão literal como uma simulação das manchas e restantes aspetos deste tipo de pintura.  
+Este projeto levou-me a ter pesquisar a fundo sobre temas que já tinha interesse mas que nunca cheguei a procurar mais a nível técnico. Foi um abre-olhos que precisava, até para ter uma noção melhor do mundo enorme da Computação Gráfica, especificamente a nível de _shaders_, e que me mostrou que é um mundo pelo qual quero continuar a aventurar-me e descobrir mais sobre outros temas que também tenho interesse.  
+Apesar deste projeto estar incompleto, pretendo finalizá-lo num futuro próximo (até porque é um tema muito interessante e pode ser uma boa peça de portfólio).  
 
 ---
 
@@ -150,8 +158,8 @@ Mantive a lógica da primeira tentativa mas retirei a _GrainNormalIntensity_ poi
 
 ### Bibliotecas
 
-Powerpoints e vídeos disponibilizados pelo professor.  
-Utilização de IA para tirar dúvidas, consoante a necessidade.
+_Powerpoints_ e vídeos disponibilizados pelo professor.  
+Utilização de IA para tirar dúvidas, consoante a necessidade (ChatGPT, Gemini Pro).
 
 ### Referências
 
